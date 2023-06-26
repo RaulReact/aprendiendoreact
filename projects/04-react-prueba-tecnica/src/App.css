@@ -1,0 +1,24 @@
+/* Alineamiento en fila */
+
+main{
+    display: flex;
+    flex-direction: column;
+    place-items: center;
+    max-width: 800px;
+    margin:0 auto;
+    font-family: system-ui;
+}
+
+/* Alineamiento en Columna */
+
+section{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap:2rem;
+}
+
+section image{
+    max-width: 320px;
+    height: auto;
+}
