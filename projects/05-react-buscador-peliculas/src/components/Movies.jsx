@@ -1,4 +1,4 @@
-function ListOfMovies({ movies }) {
+function ListOfMovies ({ movies }) {
   return (
     <ul className='movies'>
       {
@@ -6,7 +6,7 @@ function ListOfMovies({ movies }) {
           <li className='movie' key={movie.id}>
             <h3>{movie.title}</h3>
             <p>{movie.year}</p>
-            <img src={movie.poster} alt={movie.title} />
+            <img src={movie.image} alt={movie.title} />
           </li>
         ))
   }

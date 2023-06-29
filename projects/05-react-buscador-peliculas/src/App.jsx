@@ -3,56 +3,76 @@ import { useState, useEffect, useRef } from 'react'
 import { Movies } from './components/Movies'
 import { useMovies } from './hooks/useMovies'
 
-function App () {
-  const { movies } = useMovies()
-  const [query, setQuery] = useState('')
-  const [error, setError] = useState('')
+function useSearch () {
+  const [search, updateSearch] = useState('')
+  const [error, setError] = useState(null)
   const isFirstInput = useRef(true)
-  //Usamos el hook de React 'UseRef' - Recuperamos el elemento del DOM (input) y lo guardamos en una referencia (Forma no controlada de React)
-  //const inputRef = useRef()
-  // Haria falta tambien en el input poner el atributo 'ref={inputRef}'
-  // Y luego en la funcion "handle Submit" lo que esta comentado
-
-  const handleSubmit = (event) => {
-    // Gestionamos el formulario a traves de React con UseRef . Si tendriamos varios inputs necesitariamos varios useRef
-    // const value = inputRef.current.value
-    // console.log(value)
-
-    //En este ultimo ejemplo lo estamos gestionando de forma descontrolada utilizando VanillaJS (informacion DOM) sin necesidad de React
-    event.preventDefault()
-    // const { query } = Object.fromEntries(
-    //   new window.FormData(event.target)
-    // )
-    console.log(query)
-  }
-
-  const handleChange = (event) => {
-    setQuery(event.target.value)
-  }
 
   useEffect(() => {
     if (isFirstInput.current) {
-      isFirstInput.current = query === ''
+      isFirstInput.current = search === ''
       return
     }
-    if (query === '') {
-      setError('No se puede buscar una pelicula vacia')
+
+    if (search === '') {
+      setError('No se puede buscar una película vacía')
+      return
+    }
+
+    if (search.match(/^\d+$/)) {
+      setError('No se puede buscar una película con un número')
+      return
+    }
+
+    if (search.length < 3) {
+      setError('La búsqueda debe tener al menos 3 caracteres')
       return
     }
 
     setError(null)
-  }, [query])
+  }, [search])
+
+  return { search, updateSearch, error }
+}
+
+function App () {
+  const [sort, setSort] = useState(false)
+  const { search, updateSearch, error } = useSearch()
+  const { movies, getMovies } = useMovies({ search, sort })
+
+  const handleSubmit = (event) => {
+    event.preventDefault()
+    getMovies({ search })
+  }
+
+  const handleChange = (event) => {
+    const newSearch = event.target.value
+    updateSearch(newSearch)
+  }
+
+  const handleSort = () =>{
+    setSort(!sort)
+  }
 
   return (
     <div className='page'>
+
       <header>
-        <h1>Buscador de Películas</h1>
+        <h1>Buscador de películas</h1>
         <form className='form' onSubmit={handleSubmit}>
-          <input onChange={handleChange} name='query' placeholder='The Avengers, Star Wars, The Matrix ....' />
+          <input
+            style={{
+              border: '1px solid transparent',
+              borderColor: error ? 'red' : 'transparent'
+            }} onChange={handleChange} value={search} name='query' placeholder='Avengers, Star Wars, The Matrix...'
+          />
+          <input type='checkbox' onChange={handleSort} checked={sort} />
+
           <button type='submit'>Buscar</button>
         </form>
         {error && <p style={{ color: 'red' }}>{error}</p>}
       </header>
+
       <main>
         <Movies movies={movies} />
       </main>
