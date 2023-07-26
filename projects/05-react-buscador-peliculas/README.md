@@ -3,7 +3,7 @@ Crear una aplicacion para buscar películas
 API a usar:
 
 -https://www.omdbapi.com/
--API_KEY: 3dabfcaa
+-API_KEY: 
 
 Requerimientos
 
