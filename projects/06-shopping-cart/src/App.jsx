@@ -5,6 +5,8 @@ import { useState } from 'react'
 import { Header } from './components/Header'
 import { Footer } from './components/Footer'
 import { IS_DEVELOPMENT } from './config'
+import { Cart } from './components/Cart.jsx'
+import { CartProvider } from './context/cart.jsx'
 
 
 
@@ -15,11 +17,12 @@ function App() {
   const filteredProducts = filterProducts(products)
 
   return (
-    <>
+    <CartProvider>
       <Header />
+      <Cart/>
       <Products products={filteredProducts}/>
       {IS_DEVELOPMENT && <Footer/>}
-    </>
+    </CartProvider>
   )
 }
 
