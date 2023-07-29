@@ -1,43 +1,6 @@
-import { createContext,useReducer,useState } from "react";
+import { createContext,useReducer } from "react";
+import { cartReducer, cartInitialState } from "../reducers/cart";
 
-const initialState = []
-// Reducer - Transforma el estado (state) a traves de una accion(action) a partir
-// de un nuevo estado. Devuelve un estado
-
-const reducer = (state,action)=>{
-    const {type:actionType, payload: actionPayload} = action
-    switch(action.type){
-        case 'ADD_TO_CART':{
-            const {id} = actionPayload
-            const productInCartIndex = state.findIndex(item => item.id === id)
-
-            if(productInCartIndex >= 0){
-                //Una forma seria usando "structuredClone" - Nos permite hacer una copia profunda de un array
-                const newState = structuredClone(state)
-                newState[productInCartIndex].quantity += 1
-                return newState
-            }
-
-            return [
-                ...state,
-                {
-                    ...actionPayload, // product
-                    quantity:1
-                }
-            ]
-        }
-        case 'REMOVE_FROM_CART':{
-            const {id} = actionPayload
-            return state.filter(item => item.id !== id)
-        }
-
-        case 'CLEAR_CART': {
-            return initialState;
-        }
-    }
-
-    return state
-}
 // 1. Crear Contexto
 export const CartContext = createContext() //Singleton - Solo se llama una vez
 
@@ -49,7 +12,7 @@ export function CartProvider ({children}){
     //Aqui algo muy interesante porque aparece el metodo o la funcion dispatch
     // que va a ser el encargado de enviar las acciones a el reducer
     
-    const [state,dispatch] = useReducer(reducer,initialState)
+    const [state,dispatch] = useReducer(cartReducer,cartInitialState)
 
     const addToCart = product => dispatch({
         type:'ADD_TO_CART',
