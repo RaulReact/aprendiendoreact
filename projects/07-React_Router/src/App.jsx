@@ -1,36 +1,28 @@
-import { useState } from 'react'
+import HomePage from './pages/Home'
+import AboutPage from './pages/About'
+import { Router } from './pages/Router'
 import './App.css'
+import Page404 from './pages/404.jsx'
 
+//Crear componente Router
 
-function HomePage(){
-  return(
-    <>
-      <h1>Home</h1>
-      <p>Esta es una pagina de ejemplo para crear un React Router desde 0</p>
-      <a href='/about'>Ir a sobre nosotros</a>
-    </>
-  )
-}
-
-function AboutPage(){
-  return(
-    <>
-      <h1>About</h1>
-      <p>Hola me llamo Raúl y estoy creando un clon de React Router a partir de las explicaciones de midu</p>
-      <a href='/'>Ir a la home</a>
-    </>
-  )
-}
+const appRoutes = [
+  {
+    path:'/',
+    Component: HomePage
+  },
+  {
+    path:'/about',
+    Component:AboutPage
+  }
+]
 
 function App() {
-  const [currentPath,setCurrentPath] = useState(window.location.pathname)
   return(
     <main>
-      { currentPath === '/' && <HomePage/>}
-      { currentPath === '/about' && <AboutPage/>}
+      <Router routes={appRoutes} defaultComponent={Page404}/>
     </main>
   )
-
 }
 
 export default App
