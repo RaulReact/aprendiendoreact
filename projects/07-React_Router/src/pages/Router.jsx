@@ -1,8 +1,9 @@
 import { EVENTS } from "../../const"
 import { useEffect,useState } from "react"
 import { match } from "path-to-regexp"
+import { Children } from "react"
 
-export function Router({ routes = [] , defaultComponent:DefaultComponent =  () => 
+export function Router({ children, routes = [] , defaultComponent:DefaultComponent =  () => 
 <h1>404</h1> }) {
     const [currentPath,setCurrentPath] = useState(window.location.pathname)
     //La primera vesz que se ejecuta el componente ... Por eso utilizamos useEffect
@@ -28,7 +29,15 @@ export function Router({ routes = [] , defaultComponent:DefaultComponent =  () =
     
     let routeParams = {}
 
-    const Page = routes.find(({ path }) => {
+    //Añadir las rutas que vienen del "children" <Route> components
+    const routesFromChildren = Children.map(children , ({props,type})=>{
+        const {name} = type
+        const isRoute = name === "Route"
+        return isRoute ? props : null
+    })
+    const routesToUse = routes.concat(routesFromChildren)
+
+    const Page = routesToUse.find(({ path }) => {
         if (path === currentPath) return true
 
     // hemos usado path-to-regexp
