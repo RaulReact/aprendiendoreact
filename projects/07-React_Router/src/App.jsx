@@ -1,5 +1,3 @@
-import HomePage from './pages/Home'
-import AboutPage from './pages/About'
 import SearchPage from './pages/Search'
 import Page404 from './pages/404.jsx'
 import { lazy } from 'react'
@@ -20,6 +18,10 @@ const LazyAboutPage = lazy(() => import('./pages/About.jsx'))
 //Crear componente Router
 
 const appRoutes = [
+  {
+    path:'/:lang/about',
+    Component:LazyAboutPage
+  },
   {
     path:'/search/:query',
     Component: SearchPage

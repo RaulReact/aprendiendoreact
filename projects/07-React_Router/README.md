@@ -9,5 +9,6 @@
 - Soportar rutas con párametros
 - Componente <Route/> para hacerlo declarativo
 - Lazy loading de las rutas
+- Hacer un i18n con las rutas (Internacionalizacion - Poner páginas en varios idiomas)
 - Testing
 - Publicar paquete en NPM
