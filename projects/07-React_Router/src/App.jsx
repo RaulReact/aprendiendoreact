@@ -1,6 +1,7 @@
 import HomePage from './pages/Home'
 import AboutPage from './pages/About'
 import { Router } from './pages/Router'
+import SearchPage from './pages/Search'
 import './App.css'
 import Page404 from './pages/404.jsx'
 
@@ -14,6 +15,10 @@ const appRoutes = [
   {
     path:'/about',
     Component:AboutPage
+  },
+  {
+    path:'/search/:query',
+    Component: SearchPage
   }
 ]
 

@@ -1,6 +1,9 @@
 import { EVENTS } from "../../const"
 import { useEffect,useState } from "react"
-export function Router({ routes = [] , defaultComponent:DefaultComponent = () => <h1>404</h1> }){
+import { match } from "path-to-regexp"
+
+export function Router({ routes = [] , defaultComponent:DefaultComponent =  () => 
+<h1>404</h1> }) {
     const [currentPath,setCurrentPath] = useState(window.location.pathname)
     //La primera vesz que se ejecuta el componente ... Por eso utilizamos useEffect
   
@@ -22,8 +25,33 @@ export function Router({ routes = [] , defaultComponent:DefaultComponent = () =>
         window.removeEventListener(EVENTS.POPSTATE, onLocationChange)
       }
     }, [])
-  
-    const Page = routes.find(({ path }) => path === currentPath)?.Component
-    return Page ? <Page/> : <DefaultComponent/>
+    
+    let routeParams = {}
+
+    const Page = routes.find(({ path }) => {
+        if (path === currentPath) return true
+
+    // hemos usado path-to-regexp
+    // para poder detectar rutas dinámicas como por ejemplo
+    // /search/:query <- :query es una ruta dinámica
+    const matcherUrl = match(path, { decode: decodeURIComponent })
+    const matched = matcherUrl(currentPath)
+    if (!matched) return false
+
+    // guardar los parámetros de la url que eran dinámicos
+    // y que hemos extraído con path-to-regexp
+    // por ejemplo, si la ruta es /search/:query
+    // y la url es /search/javascript
+    // matched.params.query === 'javascript'
+    routeParams = matched.params
+    return true
+
+    //Optional Changing . El Oprtional Changiung evita que el metodo find, por ejemplo, haga romperla aplicacion cuando devuelve null
+    //El Optional Changing es el "." que va despues de la "?"
+  })?.Component
+
+  return Page
+    ? <Page routeParams={routeParams} />
+    : <DefaultComponent routeParams={routeParams} />
   }
   
